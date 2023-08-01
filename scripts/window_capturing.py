@@ -3,45 +3,51 @@ import win32ui
 import win32con
 import numpy as np
 import cv2
+from time import sleep
 
 
-def get_screenshot(window_name):
-    # define your window size
-    w, h = 2600, 1080
+class Window:
+    height = 0
+    width = 0
+    hwnd = None
 
-    # get hwnd
-    hwnd = win32gui.FindWindow(None, window_name)
+    def __init__(self, window_name, w=1920, h=1080):
+        self.height = h
+        self.width = w
 
-    # get the window image data
-    wdc = win32gui.GetWindowDC(hwnd)
-    dc_obj = win32ui.CreateDCFromHandle(wdc)
-    cdc = dc_obj.CreateCompatibleDC()
-    data_bit_map = win32ui.CreateBitmap()
-    data_bit_map.CreateCompatibleBitmap(dc_obj, w, h)
-    cdc.SelectObject(data_bit_map)
-    cdc.BitBlt((0, 0), (w, h), dc_obj, (0, 0), win32con.SRCCOPY)
+        self.hwnd = win32gui.FindWindow(window_name)
 
-    # save the image as a bitmap file
-    data_bit_map.SaveBitmapFile(cdc, 'debug.bmp')
+    def get_screenshot(self):
+        # get the window image data
+        wdc = win32gui.GetWindowDC(hwnd)
+        dc_obj = win32ui.CreateDCFromHandle(wdc)
+        cdc = dc_obj.CreateCompatibleDC()
+        data_bit_map = win32ui.CreateBitmap()
+        data_bit_map.CreateCompatibleBitmap(dc_obj, w, h)
+        cdc.SelectObject(data_bit_map)
+        cdc.BitBlt((0, 0), (w, h), dc_obj, (0, 0), win32con.SRCCOPY)
 
-    # convert the raw data into a format opencv can read
-    signed_ints_array = data_bit_map.GetBitmapBits(True)
-    img = np.frombuffer(signed_ints_array, dtype='uint8')
-    img.shape = (h, w, 4)
+        # save the image as a bitmap file
+        data_bit_map.SaveBitmapFile(cdc, 'debug.bmp')
 
-    # free resources
-    dc_obj.DeleteDC()
-    cdc.DeleteDC()
-    win32gui.ReleaseDC(hwnd, wdc)
-    win32gui.DeleteObject(data_bit_map.GetHandle())
+        # convert the raw data into a format opencv can read
+        signed_ints_array = data_bit_map.GetBitmapBits(True)
+        img = np.frombuffer(signed_ints_array, dtype='uint8')
+        img.shape = (self.height, self.width, 4)
 
-    # drop the alpha channel to work with cv.matchTemplate()
-    img = img[..., :3]
+        # free resources
+        dc_obj.DeleteDC()
+        cdc.DeleteDC()
+        win32gui.ReleaseDC(self.hwnd, wdc)
+        win32gui.DeleteObject(data_bit_map.GetHandle())
 
-    # make image C_CONTIGUOUS to avoid errors with cv.rectangle()
-    img = np.ascontiguousarray(img)
+        # drop the alpha channel to work with cv.matchTemplate()
+        img = img[..., :3]
 
-    return img
+        # make image C_CONTIGUOUS to avoid errors with cv.rectangle()
+        img = np.ascontiguousarray(img)
+
+        return img
 
 
 def enum_handler(hwnd, lparam):
@@ -55,11 +61,12 @@ def enum_handler(hwnd, lparam):
 
 def show_windows():
     win32gui.EnumWindows(enum_handler, None)
+    exit(0)
 
 
 if __name__ == '__main__':
-    show_windows()
-    name = 'HOC_OpenAI – window_capturing.py'
+    #show_windows()
+    name = 'Диспетчер задач'
 
     image = get_screenshot(name)
     cv2.imshow('test', image)

@@ -82,3 +82,19 @@
 132348 Параметры
 66592 MBAMessageCenter
 65876 Program Manager
+262790 SCM
+787450 HOC_OpenAI – window_capturing.py
+1049532 Диспетчер задач
+132258 Параметры
+197802 Параметры
+66570 Microsoft Text Input Application
+786910 Хост Windows Shell Experience
+65866 Program Manager
+262790 SCM
+787450 HOC_OpenAI – window_capturing.py
+1049532 Диспетчер задач
+132258 Параметры
+197802 Параметры
+66570 Microsoft Text Input Application
+786910 Хост Windows Shell Experience
+65866 Program Manager
