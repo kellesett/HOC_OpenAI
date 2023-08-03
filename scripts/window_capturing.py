@@ -15,17 +15,22 @@ class Window:
         self.height = h
         self.width = w
 
-        self.hwnd = win32gui.FindWindow(window_name)
+        temp_storage = dict()
+        win32gui.EnumWindows(searching_handler, temp_storage)
+        try:
+            self.hwnd = temp_storage[window_name]
+        except KeyError:
+            print('Bad window, guy.')
 
     def get_screenshot(self):
         # get the window image data
-        wdc = win32gui.GetWindowDC(hwnd)
+        wdc = win32gui.GetWindowDC(self.hwnd)
         dc_obj = win32ui.CreateDCFromHandle(wdc)
         cdc = dc_obj.CreateCompatibleDC()
         data_bit_map = win32ui.CreateBitmap()
-        data_bit_map.CreateCompatibleBitmap(dc_obj, w, h)
+        data_bit_map.CreateCompatibleBitmap(dc_obj, self.width, self.height)
         cdc.SelectObject(data_bit_map)
-        cdc.BitBlt((0, 0), (w, h), dc_obj, (0, 0), win32con.SRCCOPY)
+        cdc.BitBlt((0, 0), (self.width, self.height), dc_obj, (0, 0), win32con.SRCCOPY)
 
         # save the image as a bitmap file
         data_bit_map.SaveBitmapFile(cdc, 'debug.bmp')
@@ -50,7 +55,7 @@ class Window:
         return img
 
 
-def enum_handler(hwnd, lparam):
+def enum_handler(hwnd, storage):
     with open('windows_list.txt', 'a', encoding='utf-8') as file:
         if not win32gui.IsWindowVisible(hwnd):
             return
@@ -59,15 +64,22 @@ def enum_handler(hwnd, lparam):
             print(hwnd, window_name, file=file)
 
 
+def searching_handler(hwnd, storage):
+    if not win32gui.IsWindowVisible(hwnd):
+        return
+    window_name = win32gui.GetWindowText(hwnd)
+    if window_name:
+        storage[window_name] = hwnd
+
+
 def show_windows():
     win32gui.EnumWindows(enum_handler, None)
     exit(0)
 
 
 if __name__ == '__main__':
-    #show_windows()
-    name = 'Диспетчер задач'
-
-    image = get_screenshot(name)
-    cv2.imshow('test', image)
+    # show_windows()
+    memu = Window('MEmu')
+    img = memu.get_screenshot()
+    cv2.imshow('res', img)
     cv2.waitKey()
