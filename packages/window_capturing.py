@@ -4,7 +4,7 @@ import win32con
 import numpy as np
 import cv2
 from time import sleep
-from console_design import system_message
+from packages.console_design import system_message
 
 
 class Window:
@@ -12,7 +12,15 @@ class Window:
     width = 0
     hwnd = None
 
-    def __init__(self, window_name, w=1920, h=1080):
+    def __init__(self, window_name, w=1920, h=1080, mode='S'):
+        """
+        :param window_name:
+        :param w:
+        :param h:
+        :param mode: Specify error situations
+            S: Search window for one time
+            O: Already know that window will be opened
+        """
         self.height = h
         self.width = w
 
@@ -21,7 +29,8 @@ class Window:
         try:
             self.hwnd = temp_storage[window_name]
         except KeyError:
-            system_message('Required window isn\'t available.', m_type='E')
+            if mode == 'S':
+                system_message('Required window isn\'t available.', m_type='E')
 
     def get_screenshot(self):
         # get the window image data
@@ -34,7 +43,7 @@ class Window:
         cdc.BitBlt((0, 0), (self.width, self.height), dc_obj, (0, 0), win32con.SRCCOPY)
 
         # save the image as a bitmap file
-        data_bit_map.SaveBitmapFile(cdc, 'debug.bmp')
+        # data_bit_map.SaveBitmapFile(cdc, 'debug.bmp')
 
         # convert the raw data into a format opencv can read
         signed_ints_array = data_bit_map.GetBitmapBits(True)

@@ -1,3 +1,3 @@
-from win32_devices import *
-from window_capturing import *
-from console_design import *
+from . import win32_devices
+from . import window_capturing
+from . import console_design

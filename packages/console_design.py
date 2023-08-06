@@ -3,17 +3,18 @@ from colorama import Fore, Back, Style
 init()
 
 
-def system_message(text, m_type: str = 'N') -> None:
+def system_message(*args, mode: str = 'N') -> None:
     """
-    :param text: Message text
-    :param m_type: Specify color of text
+    :param mode: Specify color of text
         N - Neutral message with yellow color
         E - Error message
     :return:
     """
 
-    match m_type:
+    match mode:
         case 'E':
-            print(Fore.YELLOW + Back.RED + Style.BRIGHT + 'S: | ERROR | ' + text)
+            print(Fore.YELLOW + Back.RED + Style.BRIGHT + '\nS: | ERROR | ', end='')
         case 'N':
-            print(Fore.YELLOW + Back.BLACK + Style.BRIGHT + 'S: ', text)
+            print(Fore.YELLOW + Back.BLACK + Style.BRIGHT + 'S: ', end='')
+    print(*args)
+    print(Style.RESET_ALL, end='')

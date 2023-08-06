@@ -1,8 +1,9 @@
 import cv2 as cv
 from time import sleep
 import win32gui
-from packages import Window, ClickArea
-from config_data import *
+from packages.window_capturing import Window
+from packages.win32_devices import ClickArea
+from config_data.config import *
 
 
 def world_boss_depth_farming(cnt: int = 10):

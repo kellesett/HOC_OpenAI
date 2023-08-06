@@ -1,10 +1,9 @@
-import win32gui
 import win32con
 import win32api
 from time import sleep
 from abc import ABC
 import cv2 as cv
-from window_capturing import Window
+from packages.window_capturing import Window
 
 
 MOUSEEVENT_SCALE = 65535.0
@@ -89,12 +88,3 @@ class ClickArea:
 
     def Click(self):
         Mouse.LeftClick(self.x, self.y)
-
-
-if __name__ == '__main__':
-    # Mouse.GetCursorPos()
-    cur = Window('MEmu')
-    screen = cur.get_screenshot()
-
-    template = cv.imread('../images/HOC_icon.png')
-    icon = ClickArea(template, screen, test_mode=True)

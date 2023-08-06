@@ -1,8 +1,9 @@
 import cv2 as cv
 from time import sleep
 import win32gui
-from packages import ClickArea, Window
-from config_data import *
+from packages.win32_devices import ClickArea
+from packages.window_capturing import Window
+from config_data.config import *
 
 
 def nightmare_exploration():
