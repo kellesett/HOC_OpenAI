@@ -52,19 +52,20 @@ class ClickArea:
     y_cord = 0
     possibility = 0
 
-    def __init__(self, area_img, window: Window, non_repudiation=True, test_mode=False, moving_button=False):
+    def __init__(self, area_img, window: Window, non_repudiation=False, test_mode=False, moving_button=False):
         threshold = 0.9
         screen_img = window.get_screenshot()
 
         check_result = cv.matchTemplate(screen_img, area_img, cv.TM_CCOEFF_NORMED)
-        sleep(.2)
+        sleep(.1)
         screen_img = window.get_screenshot()
         result = cv.matchTemplate(screen_img, area_img, cv.TM_CCOEFF_NORMED)
+
         ch_min_val, ch_max_val, ch_min_loc, ch_max_loc = cv.minMaxLoc(check_result)
         min_val, max_val, min_loc, max_loc = cv.minMaxLoc(result)
 
         while (non_repudiation and max_val < threshold) or (moving_button and max_loc != ch_max_loc):
-            sleep(.2)
+            sleep(.1)
             screen_img = window.get_screenshot()
             result = cv.matchTemplate(screen_img, area_img, cv.TM_CCOEFF_NORMED)
             ch_max_loc = max_loc

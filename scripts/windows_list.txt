@@ -1,9 +1,0 @@
-262790 SCM
-2230066 HOC_OpenAI – window_capturing.py
-1704964 MEmu
-132258 Параметры
-197802 Параметры
-66570 Microsoft Text Input Application
-786910 Хост Windows Shell Experience
-133122 win32gui__SetWindowPos_meth.html - Google Chrome
-65866 Program Manager

@@ -4,6 +4,7 @@ import win32con
 import numpy as np
 import cv2
 from time import sleep
+from console_design import system_message
 
 
 class Window:
@@ -20,7 +21,7 @@ class Window:
         try:
             self.hwnd = temp_storage[window_name]
         except KeyError:
-            print('Bad window, guy.')
+            system_message('Required window isn\'t available.', m_type='E')
 
     def get_screenshot(self):
         # get the window image data
@@ -55,15 +56,6 @@ class Window:
         return img
 
 
-def enum_handler(hwnd, storage):
-    with open('windows_list.txt', 'a', encoding='utf-8') as file:
-        if not win32gui.IsWindowVisible(hwnd):
-            return
-        window_name = win32gui.GetWindowText(hwnd)
-        if window_name:
-            print(hwnd, window_name, file=file)
-
-
 def searching_handler(hwnd, storage):
     if not win32gui.IsWindowVisible(hwnd):
         return
@@ -72,14 +64,19 @@ def searching_handler(hwnd, storage):
         storage[window_name] = hwnd
 
 
+def show_handler(hwnd, storage):
+    with open('windows_list.txt', 'a', encoding='utf-8') as file:
+        if not win32gui.IsWindowVisible(hwnd):
+            return
+        window_name = win32gui.GetWindowText(hwnd)
+        if window_name:
+            print(hwnd, window_name, file=file)
+
+
 def show_windows():
-    win32gui.EnumWindows(enum_handler, None)
+    win32gui.EnumWindows(show_handler, None)
     exit(0)
 
 
 if __name__ == '__main__':
-    # show_windows()
-    memu = Window('MEmu')
-    img = memu.get_screenshot()
-    cv2.imshow('res', img)
-    cv2.waitKey()
+    Window('skhdlks')
